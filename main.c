@@ -3,12 +3,12 @@
 #include <fcntl.h>
 
 int main() {
-    // int fd = open("test_data.txt", O_RDONLY);
+    int fd = 0;// open("test_data.txt", O_RDONLY);
 
-    char* str = get_next_line(0);
+    char* str = get_next_line(fd);
     while(str) {
         printf(">>> %s\n", str);
-        str = get_next_line(0);
+        str = get_next_line(fd);
     }
     return 0;
 }
