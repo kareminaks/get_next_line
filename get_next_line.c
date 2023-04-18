@@ -1,77 +1,57 @@
 #include "get_next_line.h"
 
-void ft_memcpy(char* dst, char* src, size_t len) {
-    size_t i = 0;
-    while(i < len) {
-        dst[i] = src[i];
-        i++;
-    }
+#define MAX_FD 256
+
+void	append(char **str, char *src, size_t len)
+{
+	size_t	strlen;
+	char	*res;
+
+	strlen = ft_strlen(*str);
+	res = malloc(strlen + len + 1);
+	ft_memcpy(res, *str, strlen);
+	ft_memcpy(res + strlen, src, len);
+	res[strlen + len] = 0;
+	free(*str);
+	*str = res;
 }
 
-void try_reallocate(char** buf, size_t* size, size_t bytes_read) {
-    if (bytes_read == *size) {
-        char* new_buf = malloc(*size + 8);
-        ft_memcpy(new_buf, *buf, *size);
-        free(*buf);
-        *buf = new_buf;
-        *size = *size + 8;
-    }
+int	contains(char *str, char c)
+{
+	int	index;
+
+	index = ft_index_of(str, c);
+	return (index >= 0);
 }
 
-char* cut(char* src, size_t len) {
-    char * res = malloc(len + 1);
-    ft_memcpy(res, src, len);
-    res[len] = 0;
-    return res;
-}
+char	*get_next_line(int fd)
+{
+	static char *bufs[MAX_FD];
+	char buf[BUFFER_SIZE];
+	int bytes_read;
 
-char *get_next_line(int fd) {
-    size_t size = 8;
-    size_t bytes_read = 0;
-    char* buf = malloc(size);
-    size_t index_of_newline; 
+	if (fd < 0 || fd >= MAX_FD)
+		return (0);
 
-    static char stash[8];
-    static size_t stash_size = 0;
+	if (!bufs[fd])
+	{
+		bufs[fd] = malloc(1);
+		bufs[fd][0] = 0;
+	}
 
-    index_of_newline = index_of(stash, stash_size, '\n');
-    if (index_of_newline < stash_size) {
-        ft_memcpy(stash, stash + index_of_newline + 1, stash_size - index_of_newline - 1);
-        ft_memcpy(buf, stash, index_of_newline + 1);
-        buf[index_of_newline + 1] = 0;
-        stash_size = stash_size - index_of_newline - 1;
-        return buf;
-    }
-
-    ft_memcpy(buf, stash, stash_size);
-    bytes_read = stash_size;
-    stash_size = 0;
-    try_reallocate(&buf, &size, bytes_read);
-
-    while (1) {
-        size_t read_now = read(fd, buf + bytes_read, size - bytes_read);
-        if (!read_now) {
+	while (1)
+	{
+        bytes_read = read(fd, buf, BUFFER_SIZE)
+        if (bytes_read <= 0)
             break;
-        }
-        index_of_newline = index_of(buf + bytes_read, read_now, '\n');
-        if (index_of_newline < read_now) {
-            bytes_read += index_of_newline + 1;
+		append(&bufs[fd], buf, bytes_read);
+		if (contains(bufs[fd], '\n'))
+		{
+			return (ft_truncate(&bufs[fd]));
+		}
+	}
+	if (bytes_read < 0)
+		return (0);
 
-            stash_size = read_now - (index_of_newline + 1);
-            ft_memcpy(stash, buf + bytes_read, stash_size);
-            break;
-        }
-
-        bytes_read += read_now;
-        try_reallocate(&buf, &size, bytes_read);
-    }
-
-    if (!bytes_read) {
-        return 0;
-    }
-
-    try_reallocate(&buf, &size, bytes_read);
-    buf[bytes_read] = 0;
-    
-    return buf;
-} 
+	return (ft_truncate(&bufs[fd]));
+}

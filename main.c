@@ -4,6 +4,7 @@
 
 int main() {
     int fd = open("test_data.txt", O_RDONLY);
+    close(fd);
 
     char* str = get_next_line(fd);
     while(str) {
