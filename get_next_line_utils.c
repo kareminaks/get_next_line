@@ -1,19 +1,32 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kkaremin <kkaremin@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/04/19 16:17:42 by kkaremin          #+#    #+#             */
+/*   Updated: 2023/04/19 17:10:30 by kkaremin         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "get_next_line.h"
 
 char	*ft_cut(char *str, size_t len)
 {
-	char	*result;
+	char	*cut;
 	size_t	i;
 
-	result = malloc(len + 1);
+	cut = malloc(len + 1);
 	i = 0;
 	while (i < len)
 	{
-		result[i] = str[i];
+		cut[i] = str[i];
 		i++;
 	}
-	result[len] = 0;
-	return (result);
+	cut[len] = 0;
+	free(str);
+	return (cut);
 }
 
 void	ft_memcpy(char *dst, char *src, size_t len)
@@ -54,10 +67,9 @@ size_t	ft_strlen(char *str)
 
 char	*ft_truncate(char **buf)
 {
-	size_t len;
-	char *result;
-	char *result;
-	char *new_buf;
+	size_t	len;
+	char	*result;
+	char	*new_buf;
 
 	len = ft_index_of(*buf, '\n') + 1;
 	if (len < 1 && ft_strlen(*buf) == 0)

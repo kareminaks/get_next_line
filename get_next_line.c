@@ -1,5 +1,16 @@
-#include "get_next_line.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kkaremin <kkaremin@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/04/19 16:17:45 by kkaremin          #+#    #+#             */
+/*   Updated: 2023/04/19 16:26:59 by kkaremin         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
+#include "get_next_line.h"
 #define MAX_FD 256
 
 void	append(char **str, char *src, size_t len)
@@ -26,32 +37,27 @@ int	contains(char *str, char c)
 
 char	*get_next_line(int fd)
 {
-	static char *bufs[MAX_FD];
-	char buf[BUFFER_SIZE];
-	int bytes_read;
+	static char	*bufs[MAX_FD];
+	char		buf[BUFFER_SIZE];
+	int			bytes_read;
 
 	if (fd < 0 || fd >= MAX_FD)
 		return (0);
-
 	if (!bufs[fd])
 	{
 		bufs[fd] = malloc(1);
 		bufs[fd][0] = 0;
 	}
-
 	while (1)
 	{
-        bytes_read = read(fd, buf, BUFFER_SIZE)
-        if (bytes_read <= 0)
-            break;
+		bytes_read = read(fd, buf, BUFFER_SIZE);
+		if (bytes_read <= 0)
+			break ;
 		append(&bufs[fd], buf, bytes_read);
 		if (contains(bufs[fd], '\n'))
-		{
 			return (ft_truncate(&bufs[fd]));
-		}
 	}
 	if (bytes_read < 0)
 		return (0);
-
 	return (ft_truncate(&bufs[fd]));
 }
