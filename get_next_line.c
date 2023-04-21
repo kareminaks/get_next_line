@@ -6,7 +6,7 @@
 /*   By: kkaremin <kkaremin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 16:17:45 by kkaremin          #+#    #+#             */
-/*   Updated: 2023/04/21 13:59:30 by kkaremin         ###   ########.fr       */
+/*   Updated: 2023/04/21 15:34:35 by kkaremin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ void	append(char **str, char *src, size_t len)
 		ft_memcpy(res, src, len);
 		res[len] = 0;
 		*str = res;
+		return ;
 	}
 	strlen = ft_strlen(*str);
 	res = malloc(strlen + len + 1);
