@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ksenia <ksenia@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kkaremin <kkaremin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 16:17:45 by kkaremin          #+#    #+#             */
-/*   Updated: 2023/04/20 12:22:32 by ksenia           ###   ########.fr       */
+/*   Updated: 2023/04/21 13:59:30 by kkaremin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,13 @@ void	append(char **str, char *src, size_t len)
 	size_t	strlen;
 	char	*res;
 
-	if (!*str) {
-		res = malloc(len+1);
+	if (!*str)
+	{
+		res = malloc(len + 1);
 		ft_memcpy(res, src, len);
 		res[len] = 0;
 		*str = res;
-		return;
 	}
-
 	strlen = ft_strlen(*str);
 	res = malloc(strlen + len + 1);
 	ft_memcpy(res, *str, strlen);
@@ -46,10 +45,12 @@ int	contains(char *str, char c)
 char	*get_next_line(int fd)
 {
 	static char	*bufs[MAX_FD];
-	char		*buf = malloc(BUFFER_SIZE);
+	char		*buf;
 	int			bytes_read;
 
-	if (fd < 0 || fd >= MAX_FD) {
+	buf = malloc(BUFFER_SIZE);
+	if (fd < 0 || fd >= MAX_FD)
+	{
 		free(buf);
 		return (0);
 	}
@@ -59,12 +60,14 @@ char	*get_next_line(int fd)
 		if (bytes_read <= 0)
 			break ;
 		append(&bufs[fd], buf, bytes_read);
-		if (contains(bufs[fd], '\n')) {
+		if (contains(bufs[fd], '\n'))
+		{
 			free(buf);
 			return (ft_truncate(&bufs[fd]));
 		}
 	}
-	if (bytes_read < 0) {
+	if (bytes_read < 0)
+	{
 		free(bufs[fd]);
 		bufs[fd] = 0;
 		free(buf);
