@@ -6,7 +6,7 @@
 /*   By: ksenia <ksenia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 16:17:45 by kkaremin          #+#    #+#             */
-/*   Updated: 2023/04/21 15:54:42 by ksenia           ###   ########.fr       */
+/*   Updated: 2023/04/21 16:16:34 by ksenia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,37 +43,38 @@ int	contains(char *str, char c)
 	return (index >= 0);
 }
 
-char	*get_next_line_with_buf(int fd, char* buf)
+char	*get_next_line_with_buf(char* buf, char** bufs_fd, int fd)
 {
-	static char	*bufs[MAX_FD];
 	int			bytes_read;
 
-	if (fd < 0 || fd >= MAX_FD)
-		return (0);
 	while (1)
 	{
 		bytes_read = read(fd, buf, BUFFER_SIZE);
 		if (bytes_read <= 0)
 			break ;
-		append(&bufs[fd], buf, bytes_read);
-		if (contains(bufs[fd], '\n'))
-			return (ft_truncate(&bufs[fd]));
+		append(bufs_fd, buf, bytes_read);
+		if (contains(*bufs_fd, '\n'))
+			return (ft_truncate(bufs_fd));
 	}
 	if (bytes_read < 0)
-	{
-		free(bufs[fd]);
-		bufs[fd] = 0;
 		return (0);
-	}
-	return (ft_truncate(&bufs[fd]));
+	return (ft_truncate(bufs_fd));
 }
 
 char	*get_next_line(int fd)
 {
 	char		*buf;
+	static char	*bufs[MAX_FD];
+
+	if (fd < 0 || fd >= MAX_FD)
+		return (0);
 
 	buf = malloc(BUFFER_SIZE);
-	char* result = get_next_line_with_buf(fd, buf);
+	char* result = get_next_line_with_buf(buf, &bufs[fd], fd);
+	if (bufs[fd] != 0 && (!result || *bufs[fd] == 0)) {
+		free(bufs[fd]);
+		bufs[fd] = 0;
+	}
 	free(buf);
 	return result;
 }

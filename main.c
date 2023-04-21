@@ -3,7 +3,7 @@
 #include <fcntl.h>
 
 int main() {
-    int fd = open("test_data.txt", O_RDONLY);
+    int fd = 1000;//open("test_data.txt", O_RDONLY);
     char* str = get_next_line(fd);
     while(str) {
         printf(">>> %s\n", str);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kkaremin <kkaremin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ksenia <ksenia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 16:17:42 by kkaremin          #+#    #+#             */
-/*   Updated: 2023/04/21 13:45:54 by kkaremin         ###   ########.fr       */
+/*   Updated: 2023/04/21 15:55:37 by ksenia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,10 +86,5 @@ char	*ft_truncate(char **buf)
 	new_buf = ft_cut(*buf + len, ft_strlen(*buf) - len);
 	free(*buf);
 	*buf = new_buf;
-	if (!**buf)
-	{
-		free(*buf);
-		*buf = 0;
-	}
 	return (result);
 }
