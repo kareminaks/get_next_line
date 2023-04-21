@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kkaremin <kkaremin@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ksenia <ksenia@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/19 16:17:45 by kkaremin          #+#    #+#             */
-/*   Updated: 2023/04/21 15:34:35 by kkaremin         ###   ########.fr       */
+/*   Updated: 2023/04/21 15:54:42 by ksenia           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,18 +43,13 @@ int	contains(char *str, char c)
 	return (index >= 0);
 }
 
-char	*get_next_line(int fd)
+char	*get_next_line_with_buf(int fd, char* buf)
 {
 	static char	*bufs[MAX_FD];
-	char		*buf;
 	int			bytes_read;
 
-	buf = malloc(BUFFER_SIZE);
 	if (fd < 0 || fd >= MAX_FD)
-	{
-		free(buf);
 		return (0);
-	}
 	while (1)
 	{
 		bytes_read = read(fd, buf, BUFFER_SIZE);
@@ -62,18 +57,23 @@ char	*get_next_line(int fd)
 			break ;
 		append(&bufs[fd], buf, bytes_read);
 		if (contains(bufs[fd], '\n'))
-		{
-			free(buf);
 			return (ft_truncate(&bufs[fd]));
-		}
 	}
 	if (bytes_read < 0)
 	{
 		free(bufs[fd]);
 		bufs[fd] = 0;
-		free(buf);
 		return (0);
 	}
-	free(buf);
 	return (ft_truncate(&bufs[fd]));
+}
+
+char	*get_next_line(int fd)
+{
+	char		*buf;
+
+	buf = malloc(BUFFER_SIZE);
+	char* result = get_next_line_with_buf(fd, buf);
+	free(buf);
+	return result;
 }
